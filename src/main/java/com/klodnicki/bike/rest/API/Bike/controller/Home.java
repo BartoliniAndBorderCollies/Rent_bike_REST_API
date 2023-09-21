@@ -10,4 +10,9 @@ public class Home {
     public String homePage() {
         return "home";
     }
+
+    @GetMapping("/api/info")
+    public String apiInfo() {
+        return "info";
+    }
 }

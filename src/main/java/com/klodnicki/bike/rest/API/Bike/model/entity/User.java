@@ -1,4 +1,4 @@
-package com.klodnicki.bike.rest.API.Bike.entity;
+package com.klodnicki.bike.rest.API.Bike.model.entity;
 
 import jakarta.persistence.*;
 

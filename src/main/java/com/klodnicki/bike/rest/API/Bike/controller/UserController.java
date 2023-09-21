@@ -6,14 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class UserController {
 
-    @GetMapping("/user")
+    @GetMapping("/login")
     public String goToUser() {
-        return "user";
+        return "login";
     }
 
-    @GetMapping("/admin")
-    public String goToAdmin() {
-        return "admin";
-    }
 
 }

@@ -15,11 +15,9 @@ public class User {
     private String login;
     private String password;
     private boolean isAccountValid;
+    private String role;
 
-    public User() {
-    }
-
-    public User(Long id, String name, String phoneNumber, int accountNumber, String login, String password, boolean isAccountValid) {
+    public User(Long id, String name, String phoneNumber, int accountNumber, String login, String password, boolean isAccountValid, String role) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -27,6 +25,18 @@ public class User {
         this.login = login;
         this.password = password;
         this.isAccountValid = isAccountValid;
+        this.role = role;
+    }
+
+    public User() {
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getName() {

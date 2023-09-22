@@ -2,10 +2,10 @@ package com.klodnicki.bike.rest.API.Bike.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,11 +36,14 @@ public class SpringSecurity {
 
         return httpSecurity.authorizeHttpRequests(request -> request
 
-                        .requestMatchers("/api/v1").permitAll()
-                        .requestMatchers("/api/login/**").hasRole("ADMIN").anyRequest().authenticated())
+        .requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/info").permitAll()
+        .requestMatchers("/api/login/**").hasAnyRole("ADMIN", "USER")
+        .anyRequest()
+        .authenticated())
 
-                        .httpBasic(Customizer.withDefaults())
-                        .build();
+        .httpBasic(Customizer.withDefaults())
+        .build();
     }
 
 

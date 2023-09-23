@@ -31,6 +31,11 @@ public class UserController {
         return userService.findAllUsers();
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteUserById (@PathVariable("id") Long id) throws NotFoundInDatabaseException {
+        userService.deleteUser(id);
+    }
+
 
 
 

@@ -27,4 +27,9 @@ public class UserService {
     public Iterable<User> findAllUsers() {
         return userRepository.findAll();
     }
+
+    public void deleteUser(Long id) throws NotFoundInDatabaseException {
+        User user = userRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
+        userRepository.delete(user);
+    }
 }

@@ -21,10 +21,7 @@ public class UserService {
     }
 
     public User findUserById(Long id) throws NotFoundInDatabaseException {
-        Optional<User> optionalUser = userRepository.findById(id);
-
-        return optionalUser.orElseThrow(NotFoundInDatabaseException::new);
-
+        return userRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
     }
 
     public Iterable<User> findAllUsers() {

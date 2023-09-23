@@ -32,4 +32,17 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
         userRepository.delete(user);
     }
+
+    public User updateUser(Long id, User userToUpdate) throws NotFoundInDatabaseException {
+        User user = userRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
+
+        user.setName(userToUpdate.getName());
+        user.setPhoneNumber(userToUpdate.getPhoneNumber());
+        user.setAccountNumber(userToUpdate.getAccountNumber());
+        user.setLogin(userToUpdate.getLogin());
+        user.setPassword(userToUpdate.getPassword());
+        user.setAccountValid(userToUpdate.isAccountValid());
+        user.setRole(userToUpdate.getRole());
+        return userRepository.save(user);
+    }
 }

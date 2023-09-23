@@ -36,6 +36,12 @@ public class UserController {
         userService.deleteUser(id);
     }
 
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable("id") Long id, @RequestBody User user) throws NotFoundInDatabaseException {
+       return userService.updateUser(id, user);
+    }
+
+
 
 
 

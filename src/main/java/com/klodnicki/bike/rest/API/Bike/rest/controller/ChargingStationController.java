@@ -35,4 +35,10 @@ public class ChargingStationController {
         chargingStationService.deleteChargingStation(id);
     }
 
+    @PutMapping("/{id}")
+    public ChargingStation updateChargingStation(@PathVariable("id") Long id, @RequestBody ChargingStation stationToUpdate)
+            throws NotFoundInDatabaseException {
+        return chargingStationService.updateChargingStation(id, stationToUpdate);
+    }
+
 }

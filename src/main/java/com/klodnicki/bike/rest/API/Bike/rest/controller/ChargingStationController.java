@@ -30,4 +30,9 @@ public class ChargingStationController {
         return chargingStationService.findStationById(id);
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteChargingStation(@PathVariable("id") Long id) throws NotFoundInDatabaseException {
+        chargingStationService.deleteChargingStation(id);
+    }
+
 }

@@ -18,5 +18,8 @@ public class ChargingStationService {
         return chargingStationRepository.save(chargingStation);
     }
 
+    public Iterable<ChargingStation> findAllChargingStations() {
+        return chargingStationRepository.findAll();
+    }
 
 }

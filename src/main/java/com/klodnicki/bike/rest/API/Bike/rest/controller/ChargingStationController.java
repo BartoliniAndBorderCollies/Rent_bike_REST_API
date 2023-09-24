@@ -19,5 +19,9 @@ public class ChargingStationController {
         return chargingStationService.addChargingStation(chargingStation);
     }
 
+    @GetMapping()
+    public Iterable<ChargingStation> findAllChargingStations() {
+        return chargingStationService.findAllChargingStations();
+    }
 
 }

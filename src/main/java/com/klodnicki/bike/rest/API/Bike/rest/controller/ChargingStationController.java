@@ -1,5 +1,6 @@
 package com.klodnicki.bike.rest.API.Bike.rest.controller;
 
+import com.klodnicki.bike.rest.API.Bike.exception.NotFoundInDatabaseException;
 import com.klodnicki.bike.rest.API.Bike.model.entity.ChargingStation;
 import com.klodnicki.bike.rest.API.Bike.service.ChargingStationService;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,11 @@ public class ChargingStationController {
     @GetMapping()
     public Iterable<ChargingStation> findAllChargingStations() {
         return chargingStationService.findAllChargingStations();
+    }
+
+    @GetMapping("/{id}")
+    public ChargingStation findStationById(@PathVariable("id") Long id) throws NotFoundInDatabaseException {
+        return chargingStationService.findStationById(id);
     }
 
 }

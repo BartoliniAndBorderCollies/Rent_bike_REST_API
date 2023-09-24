@@ -41,7 +41,7 @@ public class SpringSecurity {
         .requestMatchers(HttpMethod.GET, "/api/info").permitAll()
         .requestMatchers("/api/login/**").hasAnyRole("ADMIN", "USER")
         .anyRequest()
-        .permitAll())
+        .authenticated())
 
         .httpBasic(Customizer.withDefaults())
         .csrf(AbstractHttpConfigurer::disable)

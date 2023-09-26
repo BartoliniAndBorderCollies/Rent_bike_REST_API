@@ -29,4 +29,8 @@ public class BikeService {
     }
 
 
+    public void deleteById(Long id) throws NotFoundInDatabaseException {
+        Bike bikeToDelete = bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
+        bikeRepository.delete(bikeToDelete);
+    }
 }

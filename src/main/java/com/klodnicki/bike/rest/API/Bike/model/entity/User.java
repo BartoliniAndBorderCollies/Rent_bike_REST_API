@@ -21,9 +21,12 @@ public class User {
     private int accountNumber;
     @NotBlank(message = "Must have a value.")
     private String login;
+
     @NotBlank(message = "Must have a value.")
-    @Size(min = 6, message = "Must have minimum six characters ")
+    @Size(min = 6, message = "Must have minimum six characters.")
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[!@#$%^&*]).*", message = "Password must contain a number and a special character.")
     private String password;
+
     @NotNull(message = "Must have a value.")
     private boolean isAccountValid;
     @NotBlank(message = "Must have a value.")

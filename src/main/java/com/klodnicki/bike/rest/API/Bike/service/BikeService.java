@@ -1,5 +1,6 @@
 package com.klodnicki.bike.rest.API.Bike.service;
 
+import com.klodnicki.bike.rest.API.Bike.exception.NotFoundInDatabaseException;
 import com.klodnicki.bike.rest.API.Bike.model.entity.Bike;
 import com.klodnicki.bike.rest.API.Bike.repository.BikeRepository;
 import org.springframework.stereotype.Service;
@@ -22,4 +23,10 @@ public class BikeService {
     public Iterable<Bike> findAllBikes() {
         return bikeRepository.findAll();
     }
+
+    public Bike findBikeById(Long id) throws NotFoundInDatabaseException {
+        return bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
+    }
+
+
 }

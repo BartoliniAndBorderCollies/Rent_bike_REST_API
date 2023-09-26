@@ -30,6 +30,11 @@ public class BikeController {
         return bikeService.findBikeById(id);
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteBikeById(@PathVariable("id") Long id) throws NotFoundInDatabaseException {
+        bikeService.deleteById(id);
+    }
+
 
 
 

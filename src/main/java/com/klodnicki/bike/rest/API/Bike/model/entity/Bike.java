@@ -9,9 +9,12 @@ public class Bike {
     @Column(name = "id", nullable = false)
     private Long id;
     private String serialNumber;
+    private boolean isAvailable;
 
-    public Bike(String serialNumber) {
+    public Bike(Long id, String serialNumber, boolean isAvailable) {
+        this.id = id;
         this.serialNumber = serialNumber;
+        this.isAvailable = isAvailable;
     }
 
     public Bike() {
@@ -32,5 +35,13 @@ public class Bike {
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
     }
 }

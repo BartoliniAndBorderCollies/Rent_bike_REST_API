@@ -35,6 +35,11 @@ public class BikeController {
         bikeService.deleteById(id);
     }
 
+    @PutMapping("/{id}")
+    public Bike updateBike(@PathVariable Long id, @RequestBody Bike bikeToUpdate) throws NotFoundInDatabaseException {
+        return bikeService.updateBike(id, bikeToUpdate);
+    }
+
 
 
 

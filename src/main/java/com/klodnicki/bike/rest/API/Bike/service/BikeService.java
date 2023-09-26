@@ -18,4 +18,8 @@ public class BikeService {
     public Bike addBike(Bike bike) {
         return bikeRepository.save(bike);
     }
+
+    public Iterable<Bike> findAllBikes() {
+        return bikeRepository.findAll();
+    }
 }

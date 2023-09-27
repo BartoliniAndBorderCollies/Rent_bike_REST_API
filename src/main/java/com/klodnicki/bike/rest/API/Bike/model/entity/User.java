@@ -10,7 +10,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
     @NotBlank(message = "Must have a value.")
     private String name;
     @Digits(integer = 9, fraction = 0, message = "Must have nine numbers")
@@ -21,12 +20,10 @@ public class User {
     private int accountNumber;
     @NotBlank(message = "Must have a value.")
     private String login;
-
     @NotBlank(message = "Must have a value.")
     @Size(min = 6, message = "Must have minimum six characters.")
     @Pattern(regexp = "(?=.*[0-9])(?=.*[!@#$%^&*]).*", message = "Password must contain a number and a special character.")
     private String password;
-
     @NotNull(message = "Must have a value.")
     private boolean isAccountValid;
     @NotBlank(message = "Must have a value.")

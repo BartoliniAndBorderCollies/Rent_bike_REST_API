@@ -44,14 +44,6 @@ public class ChargingStation {
         this.freeSlots = freeSlots;
     }
 
-    public void rentBike() {
-
-    }
-
-    public void returnBike() {
-
-    }
-
 
 
 }

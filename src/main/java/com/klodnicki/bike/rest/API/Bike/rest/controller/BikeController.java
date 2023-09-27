@@ -41,6 +41,11 @@ public class BikeController {
         return bikeService.updateBike(id, bikeToUpdate);
     }
 
+    @PutMapping("/rent/{id}")
+    public void rentBike(@PathVariable Long id, @RequestBody Bike bikeToRent) throws NotFoundInDatabaseException {
+        bikeService.rentBike(id, bikeToRent);
+    }
+
 
 
 

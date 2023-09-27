@@ -28,9 +28,12 @@ public class User {
     private boolean isAccountValid;
     @NotBlank(message = "Must have a value.")
     private String role;
+    @OneToOne
+    @JoinColumn(name = "bike_id")
+    private Bike bike;
 
-    public User(Long id, String name, String phoneNumber, String emailAddress, int accountNumber, String login,
-                String password, boolean isAccountValid, String role) {
+     public User(Long id, String name, String phoneNumber, String emailAddress, int accountNumber, String login, String password, boolean
+            isAccountValid, String role, Bike bike) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -40,6 +43,7 @@ public class User {
         this.password = password;
         this.isAccountValid = isAccountValid;
         this.role = role;
+        this.bike = bike;
     }
 
     public User() {
@@ -115,5 +119,13 @@ public class User {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+    }
+
+    public Bike getBike() {
+        return bike;
+    }
+
+    public void setBike(Bike bike) {
+        this.bike = bike;
     }
 }

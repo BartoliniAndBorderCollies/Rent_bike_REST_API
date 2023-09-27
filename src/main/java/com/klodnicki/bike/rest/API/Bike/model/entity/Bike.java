@@ -17,7 +17,7 @@ public class Bike {
 
     @NotNull (message = "Must have a value")
     private boolean isRented;
-
+    @NotNull
     private BikeType bikeType;
 
     @OneToOne (mappedBy = "bike")
@@ -72,4 +72,20 @@ public class Bike {
         this.chargingStation = chargingStation;
     }
 
+
+    public BikeType getBikeType() {
+        return bikeType;
+    }
+
+    public void setBikeType(BikeType bikeType) {
+        this.bikeType = bikeType;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

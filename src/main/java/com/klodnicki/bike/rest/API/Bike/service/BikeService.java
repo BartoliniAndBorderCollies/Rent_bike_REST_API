@@ -28,7 +28,6 @@ public class BikeService {
         return bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
     }
 
-
     public void deleteById(Long id) throws NotFoundInDatabaseException {
         Bike bikeToDelete = bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
         bikeRepository.delete(bikeToDelete);
@@ -41,5 +40,18 @@ public class BikeService {
         bike.setRented(bikeToUpdate.isRented());
 
         return bikeRepository.save(bike);
+    }
+
+    public void rentBike(Long id, Bike bikeToRent) throws NotFoundInDatabaseException {
+        Bike bike = bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
+
+        bike.setRented(true);
+        bike.setUser(bikeToRent.getUser());
+        bike.setChargingStation(null);
+        bike.getChargingStation().getBikeList().remove(bikeToRent);
+        int freeSlots = bike.getChargingStation().getFreeSlots();
+        bike.getChargingStation().setFreeSlots(freeSlots+1);
+
+        bikeRepository.save(bike);
     }
 }

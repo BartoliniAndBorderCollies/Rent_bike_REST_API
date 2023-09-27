@@ -38,7 +38,7 @@ public class BikeService {
         Bike bike = bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
 
         bike.setSerialNumber(bikeToUpdate.getSerialNumber());
-        bike.setAvailable(bikeToUpdate.isAvailable());
+        bike.setRented(bikeToUpdate.isRented());
 
         return bikeRepository.save(bike);
     }

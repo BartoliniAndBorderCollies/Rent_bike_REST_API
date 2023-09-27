@@ -1,5 +1,6 @@
 package com.klodnicki.bike.rest.API.Bike.model.entity;
 
+import com.klodnicki.bike.rest.API.Bike.model.BikeType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,12 +16,23 @@ public class Bike {
     private String serialNumber;
 
     @NotNull (message = "Must have a value")
-    private boolean isAvailable;
+    private boolean isRented;
 
-    public Bike(Long id, String serialNumber, boolean isAvailable) {
+    private BikeType bikeType;
+
+    @OneToOne (mappedBy = "bike")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "charging_station_id")
+    private ChargingStation chargingStation;
+
+    public Bike(Long id, String serialNumber, BikeType bikeType, boolean isRented, User user) {
         this.id = id;
         this.serialNumber = serialNumber;
-        this.isAvailable = isAvailable;
+        this.bikeType = bikeType;
+        this.isRented = isRented;
+        this.user = user;
     }
 
     public Bike() {
@@ -43,11 +55,21 @@ public class Bike {
         this.serialNumber = serialNumber;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
+    public boolean isRented() {
+        return isRented;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
+    public void setRented(boolean rented) {
+        isRented = rented;
     }
+
+
+    public ChargingStation getChargingStation() {
+        return chargingStation;
+    }
+
+    public void setChargingStation(ChargingStation chargingStation) {
+        this.chargingStation = chargingStation;
+    }
+
 }

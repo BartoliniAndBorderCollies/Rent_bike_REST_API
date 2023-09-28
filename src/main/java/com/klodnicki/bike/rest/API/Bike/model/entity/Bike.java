@@ -17,7 +17,8 @@ public class Bike {
 
     @NotNull (message = "Must have a value")
     private boolean isRented;
-    @NotNull
+
+    @NotNull (message = "Must have a value")
     private BikeType bikeType;
 
     @OneToOne (mappedBy = "bike")

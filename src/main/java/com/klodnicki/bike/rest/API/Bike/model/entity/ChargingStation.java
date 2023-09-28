@@ -20,6 +20,7 @@ public class ChargingStation {
     @NotNull(message = "Must have a value.")
     @PositiveOrZero (message = "Must be equal or bigger than zero!")
     private int freeSlots;
+
     @OneToMany (mappedBy = "chargingStation")
     private List<Bike> bikeList;
 
@@ -55,9 +56,6 @@ public class ChargingStation {
     public void setFreeSlots(int freeSlots) {
         this.freeSlots = freeSlots;
     }
-
-
-
 
     public List<Bike> getBikeList() {
         return bikeList;

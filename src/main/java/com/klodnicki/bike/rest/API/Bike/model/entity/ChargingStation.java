@@ -1,7 +1,9 @@
 package com.klodnicki.bike.rest.API.Bike.model.entity;
 
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 @Entity
 public class ChargingStation {
     @Id
@@ -9,7 +11,11 @@ public class ChargingStation {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @NotBlank(message = "Must have a value.")
     private String name;
+
+    @NotNull(message = "Must have a value.")
+    @PositiveOrZero (message = "Must be equal or bigger than zero!")
     private int freeSlots;
 
     public ChargingStation() {
@@ -42,14 +48,6 @@ public class ChargingStation {
 
     public void setFreeSlots(int freeSlots) {
         this.freeSlots = freeSlots;
-    }
-
-    public void rentBike() {
-
-    }
-
-    public void returnBike() {
-
     }
 
 

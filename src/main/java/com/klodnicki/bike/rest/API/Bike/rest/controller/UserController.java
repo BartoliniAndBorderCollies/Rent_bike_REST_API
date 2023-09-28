@@ -3,6 +3,7 @@ package com.klodnicki.bike.rest.API.Bike.rest.controller;
 import com.klodnicki.bike.rest.API.Bike.exception.NotFoundInDatabaseException;
 import com.klodnicki.bike.rest.API.Bike.model.entity.User;
 import com.klodnicki.bike.rest.API.Bike.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,7 +17,7 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public User addUser(@RequestBody User user) {
+    public User addUser(@RequestBody @Valid User user) {
         return userService.addUser(user);
     }
 
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable("id") Long id, @RequestBody User user) throws NotFoundInDatabaseException {
+    public User updateUser(@PathVariable("id") Long id, @RequestBody @Valid User user) throws NotFoundInDatabaseException {
        return userService.updateUser(id, user);
     }
 

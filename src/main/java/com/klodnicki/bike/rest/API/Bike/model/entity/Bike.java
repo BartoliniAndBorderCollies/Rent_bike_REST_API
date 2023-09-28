@@ -1,6 +1,8 @@
 package com.klodnicki.bike.rest.API.Bike.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Bike {
@@ -8,7 +10,11 @@ public class Bike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @NotBlank(message = "Must have a value.")
     private String serialNumber;
+
+    @NotNull (message = "Must have a value")
     private boolean isAvailable;
 
     public Bike(Long id, String serialNumber, boolean isAvailable) {

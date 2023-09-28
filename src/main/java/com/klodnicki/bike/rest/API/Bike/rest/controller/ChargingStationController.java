@@ -3,6 +3,8 @@ package com.klodnicki.bike.rest.API.Bike.rest.controller;
 import com.klodnicki.bike.rest.API.Bike.exception.NotFoundInDatabaseException;
 import com.klodnicki.bike.rest.API.Bike.model.entity.ChargingStation;
 import com.klodnicki.bike.rest.API.Bike.service.ChargingStationService;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,7 +18,8 @@ public class ChargingStationController {
     }
 
     @PostMapping("/add")
-    public ChargingStation addChargingStation(@RequestBody ChargingStation chargingStation) {
+    public ChargingStation addChargingStation(@RequestBody @Valid ChargingStation chargingStation)
+            throws ConstraintViolationException {
         return chargingStationService.addChargingStation(chargingStation);
     }
 
@@ -36,7 +39,8 @@ public class ChargingStationController {
     }
 
     @PutMapping("/{id}")
-    public ChargingStation updateChargingStation(@PathVariable("id") Long id, @RequestBody ChargingStation stationToUpdate)
+    public ChargingStation updateChargingStation(@PathVariable("id") Long id, @RequestBody @Valid ChargingStation
+            stationToUpdate)
             throws NotFoundInDatabaseException {
         return chargingStationService.updateChargingStation(id, stationToUpdate);
     }

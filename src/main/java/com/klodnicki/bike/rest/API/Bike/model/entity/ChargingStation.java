@@ -1,5 +1,6 @@
 package com.klodnicki.bike.rest.API.Bike.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +22,7 @@ public class ChargingStation {
     @PositiveOrZero (message = "Must be equal or bigger than zero!")
     private int freeSlots;
 
-    @OneToMany (mappedBy = "chargingStation")
+    @OneToMany (mappedBy = "chargingStation", cascade = CascadeType.ALL)
     private List<Bike> bikeList;
 
     public ChargingStation() {

@@ -23,6 +23,7 @@ public class ChargingStation {
     private int freeSlots;
 
     @OneToMany (mappedBy = "chargingStation", cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Bike> bikeList;
 
     public ChargingStation() {

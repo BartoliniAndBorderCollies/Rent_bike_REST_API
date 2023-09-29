@@ -37,7 +37,7 @@ public class User {
     @NotBlank(message = "Must have a value.")
     private String role;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "bike_id")
     private Bike bike;
 

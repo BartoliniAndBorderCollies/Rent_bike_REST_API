@@ -1,5 +1,8 @@
 package com.klodnicki.bike.rest.API.Bike.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.klodnicki.bike.rest.API.Bike.model.BikeType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -21,11 +24,12 @@ public class Bike {
     @NotNull (message = "Must have a value")
     private BikeType bikeType;
 
-    @OneToOne (mappedBy = "bike")
+    @OneToOne (mappedBy = "bike", cascade = CascadeType.ALL)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "charging_station_id")
+//    @JsonManagedReference - ta adnotacja nie jest potrzebna, bo powoduje 415
     private ChargingStation chargingStation;
 
     public Bike(Long id, String serialNumber, BikeType bikeType, boolean isRented, User user) {
@@ -64,7 +68,6 @@ public class Bike {
         isRented = rented;
     }
 
-
     public ChargingStation getChargingStation() {
         return chargingStation;
     }
@@ -72,7 +75,6 @@ public class Bike {
     public void setChargingStation(ChargingStation chargingStation) {
         this.chargingStation = chargingStation;
     }
-
 
     public BikeType getBikeType() {
         return bikeType;

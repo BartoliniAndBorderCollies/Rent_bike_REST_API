@@ -2,6 +2,7 @@ package com.klodnicki.bike.rest.API.Bike.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.klodnicki.bike.rest.API.Bike.model.BikeType;
 import jakarta.persistence.*;
@@ -29,7 +30,8 @@ public class Bike {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "charging_station_id")
-//    @JsonManagedReference - ta adnotacja nie jest potrzebna, bo powoduje 415
+//    @JsonBackReference
+    @JsonIgnore
     private ChargingStation chargingStation;
 
     public Bike(Long id, String serialNumber, BikeType bikeType, boolean isRented, User user) {

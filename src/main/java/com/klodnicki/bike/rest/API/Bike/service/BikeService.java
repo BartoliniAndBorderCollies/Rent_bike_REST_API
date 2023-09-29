@@ -42,7 +42,7 @@ public class BikeService {
         return bikeRepository.save(bike);
     }
 
-    public void rentBike(Long id, Bike bikeToRent) throws NotFoundInDatabaseException {
+    public Bike rentBike(Long id, Bike bikeToRent) throws NotFoundInDatabaseException {
         Bike bike = bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
 
         bike.setRented(true);
@@ -52,6 +52,6 @@ public class BikeService {
         int freeSlots = bike.getChargingStation().getFreeSlots();
         bike.getChargingStation().setFreeSlots(freeSlots+1);
 
-        bikeRepository.save(bike);
+        return bikeRepository.save(bike);
     }
 }

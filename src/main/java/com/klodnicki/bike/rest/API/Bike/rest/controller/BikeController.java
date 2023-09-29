@@ -42,8 +42,8 @@ public class BikeController {
     }
 
     @PutMapping("/rent/{id}")
-    public void rentBike(@PathVariable Long id, @RequestBody Bike bikeToRent) throws NotFoundInDatabaseException {
-        bikeService.rentBike(id, bikeToRent);
+    public Bike rentBike(@PathVariable Long id, @RequestBody Bike bikeToRent) throws NotFoundInDatabaseException {
+        return bikeService.rentBike(id, bikeToRent);
     }
 
 

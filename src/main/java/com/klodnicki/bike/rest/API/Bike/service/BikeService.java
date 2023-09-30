@@ -33,24 +33,22 @@ public class BikeService {
         bikeRepository.delete(bikeToDelete);
     }
 
-    public Bike updateBike(Long id, Bike bikeToUpdate) throws NotFoundInDatabaseException {
+    public Bike updateBikeAdmin(Long id, Bike bikeToUpdate) throws NotFoundInDatabaseException  {
+
         Bike bike = bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
 
         bike.setSerialNumber(bikeToUpdate.getSerialNumber());
         bike.setRented(bikeToUpdate.isRented());
+        bike.setUser(bikeToUpdate.getUser());
+        if(bikeToUpdate.isRented()) {
+            bike.getChargingStation().getBikeList().remove(bikeToUpdate);
+            int freeSlots = bike.getChargingStation().getFreeSlots();
+            bike.getChargingStation().setFreeSlots(freeSlots+1);
+            bike.setChargingStation(null);
 
-        return bikeRepository.save(bike);
-    }
-
-    public Bike rentBike(Long id, Bike bikeToRent) throws NotFoundInDatabaseException {
-        Bike bike = bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
-
-        bike.setRented(true);
-        bike.setUser(bikeToRent.getUser());
-        bike.setChargingStation(null);
-        bike.getChargingStation().getBikeList().remove(bikeToRent);
-        int freeSlots = bike.getChargingStation().getFreeSlots();
-        bike.getChargingStation().setFreeSlots(freeSlots+1);
+        } else {
+            bike.setChargingStation(bikeToUpdate.getChargingStation());
+        }
 
         return bikeRepository.save(bike);
     }

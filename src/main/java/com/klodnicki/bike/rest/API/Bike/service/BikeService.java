@@ -1,6 +1,7 @@
 package com.klodnicki.bike.rest.API.Bike.service;
 
 import com.klodnicki.bike.rest.API.Bike.exception.NotFoundInDatabaseException;
+import com.klodnicki.bike.rest.API.Bike.model.dto.BikeForNormalUserDTO;
 import com.klodnicki.bike.rest.API.Bike.model.entity.Bike;
 import com.klodnicki.bike.rest.API.Bike.repository.BikeRepository;
 import org.springframework.stereotype.Service;
@@ -51,5 +52,20 @@ public class BikeService {
         }
 
         return bikeRepository.save(bike);
+    }
+
+    public BikeForNormalUserDTO updateBikeUser(Long id, Bike bikeToUpdate) throws NotFoundInDatabaseException {
+        Bike bike = bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
+
+        bike.setRented(bikeToUpdate.isRented());
+
+        // Save the updated Bike object
+        Bike savedBike = bikeRepository.save(bike);
+
+        // Convert the saved Bike object to BikeForNormalUserDTO
+        BikeForNormalUserDTO bikeDTO = new BikeForNormalUserDTO(savedBike.getSerialNumber(), savedBike.isRented(),
+                savedBike.getBikeType());
+
+        return bikeDTO;
     }
 }

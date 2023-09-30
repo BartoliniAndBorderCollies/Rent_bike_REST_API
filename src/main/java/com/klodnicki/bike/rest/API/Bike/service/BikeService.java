@@ -41,19 +41,20 @@ public class BikeService {
 
         bike.setSerialNumber(bikeToUpdate.getSerialNumber());
         bike.setRented(bikeToUpdate.isRented());
-        bike.setUser(bikeToUpdate.getUser()); //user doesn't work (400 bad request) -> it works, I forgot to put object
-        //into object in JSON (user is an object and I passed String in postman)
         bike.setBikeType(bikeToUpdate.getBikeType());
         if(bikeToUpdate.isRented()) {
-            bike.getChargingStation().getBikeList().remove(bikeToUpdate);
-            int freeSlots = bike.getChargingStation().getFreeSlots();
-            bike.getChargingStation().setFreeSlots(freeSlots+1);
-            bike.setChargingStation(null);//TODO throws nullPointerException
-
+            if(bike.getChargingStation() != null) {
+                bike.getChargingStation().getBikeList().remove(bikeToUpdate);
+                int freeSlots = bike.getChargingStation().getFreeSlots();
+                bike.getChargingStation().setFreeSlots(freeSlots+1);
+            }
+            bike.setChargingStation(null);
         } else {
             bike.setChargingStation(bikeToUpdate.getChargingStation());//doesn't save this information in db, now it does
-            //I must have erased @JsonIgnore and use @JsonBackReference instead
+            //I must have erased @JsonIgnore and use @JsonIdentityInfo instead
         }
+        bike.setUser(bikeToUpdate.getUser()); //user doesn't work (400 bad request) -> it works, I forgot to put object
+        //into object in JSON (user is an object and I passed String in postman)
 
         return bikeRepository.save(bike);
     }

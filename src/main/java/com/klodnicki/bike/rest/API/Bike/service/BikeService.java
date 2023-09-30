@@ -3,6 +3,7 @@ package com.klodnicki.bike.rest.API.Bike.service;
 import com.klodnicki.bike.rest.API.Bike.exception.NotFoundInDatabaseException;
 import com.klodnicki.bike.rest.API.Bike.model.dto.BikeForNormalUserDTO;
 import com.klodnicki.bike.rest.API.Bike.model.entity.Bike;
+import com.klodnicki.bike.rest.API.Bike.model.entity.ChargingStation;
 import com.klodnicki.bike.rest.API.Bike.repository.BikeRepository;
 import org.springframework.stereotype.Service;
 
@@ -40,15 +41,16 @@ public class BikeService {
 
         bike.setSerialNumber(bikeToUpdate.getSerialNumber());
         bike.setRented(bikeToUpdate.isRented());
-        bike.setUser(bikeToUpdate.getUser());
+        bike.setUser(bikeToUpdate.getUser()); //TODO user doesn't work (400 bad request)
+        bike.setBikeType(bikeToUpdate.getBikeType());
         if(bikeToUpdate.isRented()) {
             bike.getChargingStation().getBikeList().remove(bikeToUpdate);
             int freeSlots = bike.getChargingStation().getFreeSlots();
             bike.getChargingStation().setFreeSlots(freeSlots+1);
-            bike.setChargingStation(null);
+            bike.setChargingStation(null);//TODO throws nullPointerException
 
         } else {
-            bike.setChargingStation(bikeToUpdate.getChargingStation());
+            bike.setChargingStation(bikeToUpdate.getChargingStation());//TODO: doesn't save this information in db
         }
 
         return bikeRepository.save(bike);

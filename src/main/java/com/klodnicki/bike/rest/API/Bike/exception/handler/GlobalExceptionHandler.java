@@ -1,5 +1,6 @@
-package com.klodnicki.bike.rest.API.Bike.rest.controller.exception.handler;
+package com.klodnicki.bike.rest.API.Bike.exception.handler;
 
+import com.klodnicki.bike.rest.API.Bike.exception.UnauthorizedException;
 import com.klodnicki.bike.rest.API.Bike.exception.NotFoundInDatabaseException;
 import com.klodnicki.bike.rest.API.Bike.exception.RestException;
 import org.springframework.http.HttpStatus;
@@ -7,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

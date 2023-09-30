@@ -41,7 +41,8 @@ public class BikeService {
 
         bike.setSerialNumber(bikeToUpdate.getSerialNumber());
         bike.setRented(bikeToUpdate.isRented());
-        bike.setUser(bikeToUpdate.getUser()); //TODO user doesn't work (400 bad request)
+        bike.setUser(bikeToUpdate.getUser()); //user doesn't work (400 bad request) -> it works, I forgot to put object
+        //into object in JSON (user is an object and I passed String in postman)
         bike.setBikeType(bikeToUpdate.getBikeType());
         if(bikeToUpdate.isRented()) {
             bike.getChargingStation().getBikeList().remove(bikeToUpdate);

@@ -21,4 +21,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<RestException> handleValidationRequirementNotMet(MethodArgumentNotValidException e) {
         return new ResponseEntity<>(new RestException("Validation error!", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<RestException> handleNoAuthorized(UnauthorizedException e) {
+        return new ResponseEntity<>(new RestException("You don't have privileges to see that!", e.getMessage()),
+                HttpStatus.UNAUTHORIZED);
+    }
 }

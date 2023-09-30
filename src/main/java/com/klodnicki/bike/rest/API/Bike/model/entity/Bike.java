@@ -1,15 +1,13 @@
 package com.klodnicki.bike.rest.API.Bike.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import com.klodnicki.bike.rest.API.Bike.model.BikeType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Bike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +28,10 @@ public class Bike {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "charging_station_id")
-    @JsonBackReference
-    //this above hides charging station during update() but creates it in database which I can check on GET() station
-    //therefore this is what I expect and I want this.
-//    @JsonIgnore this will ignore all requests-> i will not be able to create new station in update() for admin
+    //    @JsonIgnore this will ignore all requests-> i will not be able to create new station in update() for admin
+//    @JsonBackReference -this hides station during update() but creates it in database which I can check on GET() station
+ //@JsonIdentityInfo the annotation which I add above classes (on both sides of relation) makes what I want -> creates
+    // objects in db and shows it in return JSON in postman
     private ChargingStation chargingStation;
 
     public Bike(Long id, String serialNumber, BikeType bikeType, boolean isRented, User user) {

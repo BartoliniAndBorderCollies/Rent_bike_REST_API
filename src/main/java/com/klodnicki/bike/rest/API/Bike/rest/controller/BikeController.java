@@ -1,9 +1,12 @@
 package com.klodnicki.bike.rest.API.Bike.rest.controller;
 
+import com.klodnicki.bike.rest.API.Bike.exception.UnauthorizedException;
 import com.klodnicki.bike.rest.API.Bike.exception.NotFoundInDatabaseException;
 import com.klodnicki.bike.rest.API.Bike.model.entity.Bike;
 import com.klodnicki.bike.rest.API.Bike.service.BikeService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -37,16 +40,16 @@ public class BikeController {
     }
 
     @PutMapping("/{id}")
-    public Bike updateBike(@PathVariable Long id, @RequestBody @Valid Bike bikeToUpdate) throws NotFoundInDatabaseException {
-        return bikeService.updateBike(id, bikeToUpdate);
+    public Bike updateBike(@PathVariable Long id, @RequestBody @Valid Bike bikeToUpdate,
+           @AuthenticationPrincipal UserDetails user) throws NotFoundInDatabaseException, UnauthorizedException {
+
+        if (user.getUsername().equals("admin")) {
+            return bikeService.updateBikeAdmin(id, bikeToUpdate);
+        }
+        if (user.getUsername().equals("user")) {
+            return bikeService.updateBikeUser(id, bikeToUpdate);
+        }
+
+        throw new UnauthorizedException();
     }
-
-    @PutMapping("/rent/{id}")
-    public Bike rentBike(@PathVariable Long id, @RequestBody Bike bikeToRent) throws NotFoundInDatabaseException {
-        return bikeService.rentBike(id, bikeToRent);
-    }
-
-
-
-
 }

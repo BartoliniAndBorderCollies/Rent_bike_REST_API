@@ -30,8 +30,10 @@ public class Bike {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "charging_station_id")
-//    @JsonBackReference
-    @JsonIgnore
+    @JsonBackReference
+    //this above hides charging station during update() but creates it in database which I can check on GET() station
+    //therefore this is what I expect and I want this.
+//    @JsonIgnore this will ignore all requests-> i will not be able to create new station in update() for admin
     private ChargingStation chargingStation;
 
     public Bike(Long id, String serialNumber, BikeType bikeType, boolean isRented, User user) {

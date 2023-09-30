@@ -51,7 +51,8 @@ public class BikeService {
             bike.setChargingStation(null);//TODO throws nullPointerException
 
         } else {
-            bike.setChargingStation(bikeToUpdate.getChargingStation());//TODO: doesn't save this information in db
+            bike.setChargingStation(bikeToUpdate.getChargingStation());//doesn't save this information in db, now it does
+            //I must have erased @JsonIgnore and use @JsonBackReference instead
         }
 
         return bikeRepository.save(bike);

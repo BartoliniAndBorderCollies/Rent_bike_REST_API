@@ -5,17 +5,20 @@ import com.klodnicki.bike.rest.API.Bike.model.dto.BikeForNormalUserDTO;
 import com.klodnicki.bike.rest.API.Bike.model.entity.Bike;
 import com.klodnicki.bike.rest.API.Bike.model.entity.User;
 import com.klodnicki.bike.rest.API.Bike.repository.BikeRepository;
+import com.klodnicki.bike.rest.API.Bike.repository.UserRepository;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class BikeService {
 
     private final BikeRepository bikeRepository;
+    private final UserRepository userRepository;
 
 
-    public BikeService(BikeRepository bikeRepository) {
+    public BikeService(BikeRepository bikeRepository,
+                       UserRepository userRepository) {
         this.bikeRepository = bikeRepository;
+        this.userRepository = userRepository;
     }
 
     public Bike addBike(Bike bike) {
@@ -48,16 +51,17 @@ public class BikeService {
             throw new NotFoundInDatabaseException();
         }
 
-        bike.setUser(userToBeAssigned); //user doesn't work (400 bad request) -> it works, I forgot to put object
-        //into object in JSON (user is an object and I passed String in postman)
-        //if I updated a bike with user it didn't show up when I send GET request on a bike. the response was that
-        //bike has a field user with null value. The reason for this was that @OneToOne relationship between User and
-        // Bike, with User being the owning side of the relationship. This means that if I set the User on the Bike,
-        // but don’t set the Bike on the User, then JPA won’t know about the relationship and won’t update the
-        // database accordingly.
-        // To fix this, I should also set the Bike on the User when I'm setting the User on the Bike:
-        bikeToUpdate.getUser().setBike(bike);
-
+        if (checkIfUserExistInDatabase(userToBeAssigned.getId())) {
+            bike.setUser(userToBeAssigned); //user doesn't work (400 bad request) -> it works, I forgot to put object
+            //into object in JSON (user is an object and I passed String in postman)
+            //if I updated a bike with user it didn't show up when I send GET request on a bike. the response was that
+            //bike has a field user with null value. The reason for this was that @OneToOne relationship between User and
+            // Bike, with User being the owning side of the relationship. This means that if I set the User on the Bike,
+            // but don’t set the Bike on the User, then JPA won’t know about the relationship and won’t update the
+            // database accordingly.
+            // To fix this, I should also set the Bike on the User when I'm setting the User on the Bike:
+            bikeToUpdate.getUser().setBike(bike);
+        }
 
         if(bikeToUpdate.isRented()) {
             if(bike.getChargingStation() != null) {
@@ -71,6 +75,11 @@ public class BikeService {
             //I must have erased @JsonIgnore and use @JsonIdentityInfo instead
         }
         return bikeRepository.save(bike);
+    }
+
+    private boolean checkIfUserExistInDatabase(Long id) throws NotFoundInDatabaseException {
+        userRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
+        return true;
     }
 
     public BikeForNormalUserDTO updateBikeUser(Long id, Bike bikeToUpdate) throws NotFoundInDatabaseException {

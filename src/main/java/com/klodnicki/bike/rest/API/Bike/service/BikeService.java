@@ -6,6 +6,9 @@ import com.klodnicki.bike.rest.API.Bike.model.entity.Bike;
 import com.klodnicki.bike.rest.API.Bike.model.entity.ChargingStation;
 import com.klodnicki.bike.rest.API.Bike.model.entity.User;
 import com.klodnicki.bike.rest.API.Bike.repository.BikeRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +17,9 @@ public class BikeService {
     private final BikeRepository bikeRepository;
     private final UserService userService;
     private final ChargingStationService chargingStationService;
+
+    @Autowired
+    private EntityManager entityManager;
 
     public BikeService(BikeRepository bikeRepository, UserService userService, ChargingStationService chargingStationService) {
         this.bikeRepository = bikeRepository;
@@ -37,7 +43,7 @@ public class BikeService {
         Bike bikeToDelete = bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
         bikeRepository.delete(bikeToDelete);
     }
-
+@Transactional
     public Bike updateBikeAdmin(Long id, Bike bikeToUpdate) throws NotFoundInDatabaseException  {
 
         Bike bike = bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
@@ -46,28 +52,27 @@ public class BikeService {
         bike.setRented(bikeToUpdate.isRented());
         bike.setBikeType(bikeToUpdate.getBikeType());
 
+        //check if provided user is null, if yes throw an exception
         User userToBeAssigned = bikeToUpdate.getUser();
         if(userToBeAssigned == null) {
             throw new NotFoundInDatabaseException();
         }
 
+        //check if provided station is null, if yes throw an exception
         ChargingStation chargingStationToBeAssigned = bikeToUpdate.getChargingStation();
         if(chargingStationToBeAssigned == null) {
             throw new NotFoundInDatabaseException();
         }
 
+        // check if provided user exists. if not throw an exception if yes follow the logic:
+        // set user to the bike -> setting on the both sides because relation @OneToOne with owning on one side
         if (userService.checkIfUserExistInDatabase(userToBeAssigned.getId())) {
-            bike.setUser(userToBeAssigned); //user doesn't work (400 bad request) -> it works, I forgot to put object
-            //into object in JSON (user is an object and I passed String in postman)
-            //if I updated a bike with user it didn't show up when I send GET request on a bike. the response was that
-            //bike has a field user with null value. The reason for this was that @OneToOne relationship between User and
-            // Bike, with User being the owning side of the relationship. This means that if I set the User on the Bike,
-            // but don’t set the Bike on the User, then JPA won’t know about the relationship and won’t update the
-            // database accordingly.
-            // To fix this, I should also set the Bike on the User when I'm setting the User on the Bike:
+            bike.setUser(userToBeAssigned);
             bikeToUpdate.getUser().setBike(bike);
         }
 
+//     logic if bike is rented->removing bike from station, free slots of the station+1,
+//      make charging station field at this bike null
         if(bikeToUpdate.isRented()) {
             if(bike.getChargingStation() != null) {
                 bike.getChargingStation().getBikeList().remove(bikeToUpdate);
@@ -75,12 +80,29 @@ public class BikeService {
                 bike.getChargingStation().setFreeSlots(freeSlots+1);
             }
             bike.setChargingStation(null);
-        } else {
+
+        //logic if bike is NOT rented -> checking if provided station exists, if no -> throws exception if yes logic:
+        // 1. set the charging station to the bike
+        // 2. merge the detached instance back into the current session by using the merge() method provided by the EntityManager
+        // 3. adds @Transactional to the method. This annotation will start a new transaction before the method is executed
+        // and commit it after the method returns.
+        // 4. remove user from the bike, user field at the bike should be null
+        } if(!bikeToUpdate.isRented()) {
             if(chargingStationService.checkIfChargingStationExistInDatabase(chargingStationToBeAssigned.getId())) {
-                bike.setChargingStation(bikeToUpdate.getChargingStation());//doesn't save this information in db, now it does
-                //I must have erased @JsonIgnore and use @JsonIdentityInfo instead
-                //TODO: remove user from bike if isRent is false
+                ChargingStation managedChargingStation = entityManager.merge(bikeToUpdate.getChargingStation());
+
+                bike.setChargingStation(managedChargingStation);
+                bike.setChargingStation(bikeToUpdate.getChargingStation());
+
+                // Get the User object associated with this Bike
+                User user = bike.getUser();
+
+                // Set both sides of the relationship to null (because it is @OneToOne relation with owning one-sided)
                 bike.setUser(null);
+                if (user != null) {
+                    user.setBike(null);
+                    userService.addUser(user);  // Save the User to persist changes
+                }
             }
         }
         return bikeRepository.save(bike);

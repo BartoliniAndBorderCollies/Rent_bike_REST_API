@@ -98,9 +98,9 @@ public class BikeService {
                 User user = bike.getUser();
 
                 // Set both sides of the relationship to null (because it is @OneToOne relation with owning one-sided)
-                bike.setUser(null);
+                bike.setUser(null); // one side
                 if (user != null) {
-                    user.setBike(null);
+                    user.setBike(null); // second side
                     userService.addUser(user);  // Save the User to persist changes
                 }
             }

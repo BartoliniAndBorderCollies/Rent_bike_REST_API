@@ -45,4 +45,9 @@ public class UserService {
         user.setRole(userToUpdate.getRole());
         return userRepository.save(user);
     }
+
+    public boolean checkIfUserExistInDatabase(Long id) throws NotFoundInDatabaseException {
+        userRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
+        return true;
+    }
 }

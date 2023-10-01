@@ -12,13 +12,11 @@ import org.springframework.stereotype.Service;
 public class BikeService {
 
     private final BikeRepository bikeRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-
-    public BikeService(BikeRepository bikeRepository,
-                       UserRepository userRepository) {
+    public BikeService(BikeRepository bikeRepository, UserService userService) {
         this.bikeRepository = bikeRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public Bike addBike(Bike bike) {
@@ -51,7 +49,7 @@ public class BikeService {
             throw new NotFoundInDatabaseException();
         }
 
-        if (checkIfUserExistInDatabase(userToBeAssigned.getId())) {
+        if (userService.checkIfUserExistInDatabase(userToBeAssigned.getId())) {
             bike.setUser(userToBeAssigned); //user doesn't work (400 bad request) -> it works, I forgot to put object
             //into object in JSON (user is an object and I passed String in postman)
             //if I updated a bike with user it didn't show up when I send GET request on a bike. the response was that
@@ -75,11 +73,6 @@ public class BikeService {
             //I must have erased @JsonIgnore and use @JsonIdentityInfo instead
         }
         return bikeRepository.save(bike);
-    }
-
-    private boolean checkIfUserExistInDatabase(Long id) throws NotFoundInDatabaseException {
-        userRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
-        return true;
     }
 
     public BikeForNormalUserDTO updateBikeUser(Long id, Bike bikeToUpdate) throws NotFoundInDatabaseException {

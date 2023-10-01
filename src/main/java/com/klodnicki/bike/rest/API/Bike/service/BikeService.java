@@ -3,6 +3,7 @@ package com.klodnicki.bike.rest.API.Bike.service;
 import com.klodnicki.bike.rest.API.Bike.exception.NotFoundInDatabaseException;
 import com.klodnicki.bike.rest.API.Bike.model.dto.BikeForNormalUserDTO;
 import com.klodnicki.bike.rest.API.Bike.model.entity.Bike;
+import com.klodnicki.bike.rest.API.Bike.model.entity.User;
 import com.klodnicki.bike.rest.API.Bike.repository.BikeRepository;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,13 @@ public class BikeService {
         bike.setSerialNumber(bikeToUpdate.getSerialNumber());
         bike.setRented(bikeToUpdate.isRented());
         bike.setBikeType(bikeToUpdate.getBikeType());
-        bike.setUser(bikeToUpdate.getUser()); //user doesn't work (400 bad request) -> it works, I forgot to put object
+
+        User userToBeAssigned = bikeToUpdate.getUser();
+        if(userToBeAssigned == null) {
+            throw new NotFoundInDatabaseException();
+        }
+
+        bike.setUser(userToBeAssigned); //user doesn't work (400 bad request) -> it works, I forgot to put object
         //into object in JSON (user is an object and I passed String in postman)
         //if I updated a bike with user it didn't show up when I send GET request on a bike. the response was that
         //bike has a field user with null value. The reason for this was that @OneToOne relationship between User and

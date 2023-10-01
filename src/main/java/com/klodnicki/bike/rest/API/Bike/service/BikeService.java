@@ -3,9 +3,9 @@ package com.klodnicki.bike.rest.API.Bike.service;
 import com.klodnicki.bike.rest.API.Bike.exception.NotFoundInDatabaseException;
 import com.klodnicki.bike.rest.API.Bike.model.dto.BikeForNormalUserDTO;
 import com.klodnicki.bike.rest.API.Bike.model.entity.Bike;
+import com.klodnicki.bike.rest.API.Bike.model.entity.ChargingStation;
 import com.klodnicki.bike.rest.API.Bike.model.entity.User;
 import com.klodnicki.bike.rest.API.Bike.repository.BikeRepository;
-import com.klodnicki.bike.rest.API.Bike.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,10 +13,12 @@ public class BikeService {
 
     private final BikeRepository bikeRepository;
     private final UserService userService;
+    private final ChargingStationService chargingStationService;
 
-    public BikeService(BikeRepository bikeRepository, UserService userService) {
+    public BikeService(BikeRepository bikeRepository, UserService userService, ChargingStationService chargingStationService) {
         this.bikeRepository = bikeRepository;
         this.userService = userService;
+        this.chargingStationService = chargingStationService;
     }
 
     public Bike addBike(Bike bike) {
@@ -49,6 +51,11 @@ public class BikeService {
             throw new NotFoundInDatabaseException();
         }
 
+        ChargingStation chargingStationToBeAssigned = bikeToUpdate.getChargingStation();
+        if(chargingStationToBeAssigned == null) {
+            throw new NotFoundInDatabaseException();
+        }
+
         if (userService.checkIfUserExistInDatabase(userToBeAssigned.getId())) {
             bike.setUser(userToBeAssigned); //user doesn't work (400 bad request) -> it works, I forgot to put object
             //into object in JSON (user is an object and I passed String in postman)
@@ -69,8 +76,12 @@ public class BikeService {
             }
             bike.setChargingStation(null);
         } else {
-            bike.setChargingStation(bikeToUpdate.getChargingStation());//doesn't save this information in db, now it does
-            //I must have erased @JsonIgnore and use @JsonIdentityInfo instead
+            if(chargingStationService.checkIfChargingStationExistInDatabase(chargingStationToBeAssigned.getId())) {
+                bike.setChargingStation(bikeToUpdate.getChargingStation());//doesn't save this information in db, now it does
+                //I must have erased @JsonIgnore and use @JsonIdentityInfo instead
+                //TODO: remove user from bike if isRent is false
+                bike.setUser(null);
+            }
         }
         return bikeRepository.save(bike);
     }

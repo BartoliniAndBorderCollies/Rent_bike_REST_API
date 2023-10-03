@@ -6,6 +6,7 @@ import com.klodnicki.bike.rest.API.Bike.model.dto.BikeForNormalUserDTO;
 import com.klodnicki.bike.rest.API.Bike.model.entity.Bike;
 import com.klodnicki.bike.rest.API.Bike.service.BikeService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -44,9 +45,16 @@ public class BikeController {
     public Bike adminUpdateBike(@PathVariable Long id, @RequestBody @Valid Bike bikeToUpdate,
            @AuthenticationPrincipal UserDetails user) throws NotFoundInDatabaseException, UnauthorizedException {
 
-        if (user.getUsername().equals("admin")) {
-            return bikeService.updateBikeAdmin(id, bikeToUpdate);
+//        if (user.getUsername().equals("admin")) {
+//            return bikeService.updateBikeAdmin(id, bikeToUpdate);
+//        }
+
+        for (GrantedAuthority ga : user.getAuthorities()) {
+            if (ga.getAuthority().equals("ROLE_ADMIN")) {
+                return bikeService.updateBikeAdmin(id, bikeToUpdate);
+            }
         }
+
         throw new UnauthorizedException();
     }
 
@@ -54,9 +62,16 @@ public class BikeController {
     public BikeForNormalUserDTO userUpdateBike(@PathVariable Long id, @RequestBody @Valid Bike bikeToUpdate,
        @AuthenticationPrincipal UserDetails user) throws UnauthorizedException, NotFoundInDatabaseException {
 
-        if(user.getUsername().equals("user")) {
-            return bikeService.updateBikeUser(id, bikeToUpdate);
+//        if(user.getUsername().equals("user")) {
+//            return bikeService.updateBikeUser(id, bikeToUpdate);
+//        }
+
+        for (GrantedAuthority ga : user.getAuthorities()) {
+            if (ga.getAuthority().equals("ROLE_USER")) {
+                return bikeService.updateBikeUser(id, bikeToUpdate);
+            }
         }
+
         throw new UnauthorizedException();
     }
 

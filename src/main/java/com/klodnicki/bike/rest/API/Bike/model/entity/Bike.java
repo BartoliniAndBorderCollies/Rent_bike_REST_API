@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//uzywane dla klas,które są w relacji child-parent
 public class Bike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

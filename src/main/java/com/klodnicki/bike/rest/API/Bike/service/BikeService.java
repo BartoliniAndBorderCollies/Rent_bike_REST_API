@@ -43,8 +43,9 @@ public class BikeService {
         Bike bikeToDelete = bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
         bikeRepository.delete(bikeToDelete);
     }
-@Transactional
-    public Bike updateBikeAdmin(Long id, Bike bikeToUpdate) throws NotFoundInDatabaseException  {
+
+    @Transactional
+    public Bike updateBikeAdmin(Long id, Bike bikeToUpdate) throws NotFoundInDatabaseException {
 
         Bike bike = bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
 
@@ -54,13 +55,13 @@ public class BikeService {
 
         //check if provided user is null, if yes throw an exception
         User userToBeAssigned = bikeToUpdate.getUser();
-        if(userToBeAssigned == null) {
+        if (userToBeAssigned == null) {
             throw new NotFoundInDatabaseException();
         }
 
         //check if provided station is null, if yes throw an exception
         ChargingStation chargingStationToBeAssigned = bikeToUpdate.getChargingStation();
-        if(chargingStationToBeAssigned == null) {
+        if (chargingStationToBeAssigned == null) {
             throw new NotFoundInDatabaseException();
         }
 
@@ -73,26 +74,24 @@ public class BikeService {
 
 //     logic if bike is rented->removing bike from station, free slots of the station+1,
 //      make charging station field at this bike null
-        if(bikeToUpdate.isRented()) {
-            if(bike.getChargingStation() != null) {
+        if (bikeToUpdate.isRented()) {
+            if (bike.getChargingStation() != null) {
                 bike.getChargingStation().getBikeList().remove(bikeToUpdate);
                 int freeSlots = bike.getChargingStation().getFreeSlots();
-                bike.getChargingStation().setFreeSlots(freeSlots+1);
+                bike.getChargingStation().setFreeSlots(freeSlots + 1);
             }
             bike.setChargingStation(null);
 
-        //logic if bike is NOT rented -> checking if provided station exists, if no -> throws exception if yes logic:
-        // 1. set the charging station to the bike
-        // 2. merge the detached instance back into the current session by using the merge() method provided by the EntityManager
-        // 3. adds @Transactional to the method. This annotation will start a new transaction before the method is executed
-        // and commit it after the method returns.
-        // 4. remove user from the bike, user field at the bike should be null
-        } if(!bikeToUpdate.isRented()) {
-            if(chargingStationService.checkIfChargingStationExistInDatabase(chargingStationToBeAssigned.getId())) {
+            //logic if bike is NOT rented -> checking if provided station exists, if no -> throws exception if yes logic:
+            // 1. set the charging station to the bike
+            // 2. merge the detached instance back into the current session by using the merge() method provided by the EntityManager
+            // 3. adds @Transactional to the method. This annotation will start a new transaction before the method is executed
+            // and commit it after the method returns.
+            // 4. remove user from the bike, user field at the bike should be null
+        } else if (chargingStationService.checkIfChargingStationExistInDatabase(chargingStationToBeAssigned.getId())) {
+            {
                 ChargingStation managedChargingStation = entityManager.merge(bikeToUpdate.getChargingStation());
-
                 bike.setChargingStation(managedChargingStation);
-                bike.setChargingStation(bikeToUpdate.getChargingStation());
 
                 // Get the User object associated with this Bike
                 User user = bike.getUser();

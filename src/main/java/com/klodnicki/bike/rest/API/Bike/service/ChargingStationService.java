@@ -40,4 +40,9 @@ public class ChargingStationService {
         return chargingStationRepository.save(chargingStation);
     }
 
+    public boolean checkIfChargingStationExistInDatabase(Long id) throws NotFoundInDatabaseException {
+        ChargingStation chargingStation = chargingStationRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
+        return true;
+    }
+
 }

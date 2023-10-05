@@ -10,27 +10,39 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
     @NotBlank(message = "Must have a value.")
     private String name;
+
     @Digits(integer = 9, fraction = 0, message = "Must have nine numbers")
     private String phoneNumber;
+
     @Email
     private String emailAddress;
+
     @NotNull(message = "Must have a value.")
     private int accountNumber;
+
     @NotBlank(message = "Must have a value.")
     private String login;
+
     @NotBlank(message = "Must have a value.")
     @Size(min = 6, message = "Must have minimum six characters.")
     @Pattern(regexp = "(?=.*[0-9])(?=.*[!@#$%^&*]).*", message = "Password must contain a number and a special character.")
     private String password;
+
     @NotNull(message = "Must have a value.")
     private boolean isAccountValid;
+
     @NotBlank(message = "Must have a value.")
     private String role;
 
-    public User(Long id, String name, String phoneNumber, String emailAddress, int accountNumber, String login,
-                String password, boolean isAccountValid, String role) {
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "bike_id")
+    private Bike bike;
+
+     public User(Long id, String name, String phoneNumber, String emailAddress, int accountNumber, String login, String password, boolean
+            isAccountValid, String role, Bike bike) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -40,6 +52,7 @@ public class User {
         this.password = password;
         this.isAccountValid = isAccountValid;
         this.role = role;
+        this.bike = bike;
     }
 
     public User() {
@@ -115,5 +128,13 @@ public class User {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+    }
+
+    public Bike getBike() {
+        return bike;
+    }
+
+    public void setBike(Bike bike) {
+        this.bike = bike;
     }
 }

@@ -108,8 +108,7 @@ public class BikeService {
     }
 
     public BikeForNormalUserDTO updateBikeUser(Long id, Bike bikeToUpdate) throws NotFoundInDatabaseException {
-        Bike bike = bikeRepository.findById(id).orElseThrow(NotFoundInDatabaseException::new);
-
+        Bike bike = findBikeById(id);
         bike.setRented(bikeToUpdate.isRented());
 
         // Save the updated Bike object
